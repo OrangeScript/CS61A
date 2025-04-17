@@ -22,6 +22,16 @@ def roll_dice(num_rolls, dice=six_sided):
     assert num_rolls > 0, 'Must roll at least once.'
     # BEGIN PROBLEM 1
     "*** YOUR CODE HERE ***"
+    sow_sad=False
+    score=0
+    for i in range(num_rolls):
+        tensu=dice()
+        if(tensu==1):
+            sow_sad=True
+        score+=tensu
+    if(sow_sad):
+        score=1
+    return score
     # END PROBLEM 1
 
 
@@ -34,6 +44,11 @@ def boar_brawl(player_score, opponent_score):
     """
     # BEGIN PROBLEM 2
     "*** YOUR CODE HERE ***"
+    
+    score=3*abs(player_score%10-(opponent_score//10)%10)
+    if(score<=0):
+        score=1
+    return score
     # END PROBLEM 2
 
 
@@ -52,6 +67,9 @@ def take_turn(num_rolls, player_score, opponent_score, dice=six_sided):
     assert num_rolls <= 10, 'Cannot roll more than 10 dice.'
     # BEGIN PROBLEM 3
     "*** YOUR CODE HERE ***"
+    if(num_rolls==0):
+        return boar_brawl(player_score,opponent_score)
+    return roll_dice(num_rolls,dice)
     # END PROBLEM 3
 
 
@@ -77,12 +95,24 @@ def num_factors(n):
     """Return the number of factors of N, including 1 and N itself."""
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
+    count=0
+    for i in range(1,n+1):
+        if(n%i==0):
+            count+=1
+    return count
     # END PROBLEM 4
 
 def sus_points(score):
     """Return the new score of a player taking into account the Sus Fuss rule."""
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
+    sus=num_factors(score)
+    if(sus==3 or sus==4):
+        i=score+1
+        while(not is_prime(i)):
+            i+=1
+        return i
+    return score
     # END PROBLEM 4
 
 def sus_update(num_rolls, player_score, opponent_score, dice=six_sided):
@@ -91,6 +121,8 @@ def sus_update(num_rolls, player_score, opponent_score, dice=six_sided):
     """
     # BEGIN PROBLEM 4
     "*** YOUR CODE HERE ***"
+    score= sus_points(player_score+take_turn(num_rolls, player_score, opponent_score, dice))
+    return score
     # END PROBLEM 4
 
 
@@ -130,6 +162,12 @@ def play(strategy0, strategy1, update,
     who = 0  # Who is about to take a turn, 0 (first) or 1 (second)
     # BEGIN PROBLEM 5
     "*** YOUR CODE HERE ***"
+    while(score0 < goal and score1 < goal):
+        if(who==0):
+            score0=update(strategy0(score0,score1),score0,score1,dice)
+        else:
+            score1=update(strategy1(score1,score0),score1,score0,dice)
+        who=1-who
     # END PROBLEM 5
     return score0, score1
 
