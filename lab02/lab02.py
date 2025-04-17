@@ -14,7 +14,11 @@ def composite_identity(f, g):
     False
     """
     "*** YOUR CODE HERE ***"
-
+    def b1(x):
+        if(f(g(x))==g(f(x))):
+            return True
+        return False
+    return b1
 
 def sum_digits(y):
     """Return the sum of the digits of non-negative integer y."""
@@ -60,8 +64,24 @@ def count_cond(condition):
     8
     """
     "*** YOUR CODE HERE ***"
+    def func(x):
+        i,c=1,0
+        while i<=x:
+            if(condition(x,i)):
+                c+=1
+            i+=1
+        return c     
+    return func
+def gcd(a,b):
+    if(a==0):
+        return b
+    if(b==0):
+        return a
 
-
+    if(a>b):
+        return gcd(b,a % b)
+    else:
+        return gcd(a,b%a)
 def multiple(a, b):
     """Return the smallest number n that is a multiple of both a and b.
 
@@ -71,7 +91,7 @@ def multiple(a, b):
     42
     """
     "*** YOUR CODE HERE ***"
-
+    return a*b//gcd(a,b)
 
 
 def cycle(f1, f2, f3):
@@ -101,4 +121,42 @@ def cycle(f1, f2, f3):
     19
     """
     "*** YOUR CODE HERE ***"
+    # def my_cycle(n):
+    #     i=1
+    #     def identity(x):    
+    #         return x
+    #     f=identity
+    #     for i in range(n):
+    #             current_f=i%3
+    #             if(current_f==0):
+    #                 f=f3(f)
+    #             elif(current_f==1):
+    #                 f=f1(f)
+    #             elif(current_f==2):
+    #                 f=f2(f)
+    #     return f
 
+    # return my_cycle
+    # def func(n):
+    #     def result(x):
+    #         funcs=[f1,f2,f3]
+    #         for i in range(n):
+    #             x=funcs[i%3](x)
+    #         return x
+    #     return result
+    # return func
+    # def cycle(f1, f2, f3):
+    def my_cycle(n):
+        def identity(x):    
+            return x
+        f = identity
+        for i in range(n):
+            current_f = i % 3
+            if current_f == 0:
+                f = (lambda g: lambda x: f1(g(x)))(f)
+            elif current_f == 1:
+                f = (lambda g: lambda x: f2(g(x)))(f)
+            elif current_f == 2:
+                f = (lambda g: lambda x: f3(g(x)))(f)
+        return f
+    return my_cycle
