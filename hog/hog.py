@@ -193,6 +193,9 @@ def always_roll(n):
     assert n >= 0 and n <= 10
     # BEGIN PROBLEM 6
     "*** YOUR CODE HERE ***"
+    def roll(x,y):
+        return n
+    return roll
     # END PROBLEM 6
 
 
@@ -224,6 +227,12 @@ def is_always_roll(strategy, goal=GOAL):
     """
     # BEGIN PROBLEM 7
     "*** YOUR CODE HERE ***"
+    first_roll=strategy(0,0)
+    for player_score in range(goal):
+        for opponent_score in range(goal):
+            if(strategy(player_score,opponent_score)!=first_roll):
+                return False
+    return True
     # END PROBLEM 7
 
 
@@ -240,6 +249,14 @@ def make_averaged(original_function, samples_count=1000):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    def func(*args):
+        sum=0
+        for i in range(samples_count):
+            sum+=original_function(*args)
+            i+=1
+        sum/=samples_count
+        return sum
+    return func
     # END PROBLEM 8
 
 
