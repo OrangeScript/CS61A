@@ -54,6 +54,7 @@ class Insect:
     next_id = 0  # Every insect gets a unique id number
     damage = 0
     # ADD CLASS ATTRIBUTES HERE
+    is_waterproof=False
 
     def __init__(self, health, place=None):
         """Create an Insect with a health amount and a starting PLACE."""
@@ -142,10 +143,17 @@ class Ant(Insect):
         else:
             place.ant.remove_ant(self)
         Insect.remove_from(self, place)
-
+    had_been_doubled=False
     def double(self):
         """Double this ants's damage, if it has not already been doubled."""
         # BEGIN Problem 12
+        if self.is_container and self.ant_contained is not None:
+                self.ant_contained.double() 
+        if(self.had_been_doubled):
+            return
+        else:
+            self.damage*=2
+            self.had_been_doubled=True
         "*** YOUR CODE HERE ***"
         # END Problem 12
 
@@ -402,11 +410,21 @@ class Water(Place):
         """Add an Insect to this place. If the insect is not waterproof, reduce
         its health to 0."""
         # BEGIN Problem 10
-        "*** YOUR CODE HERE ***"
+        
+        super().add_insect(insect)
+        if(not insect.is_waterproof):
+            insect.reduce_health(insect.health)
+        
         # END Problem 10
 
 # BEGIN Problem 11
 # The ScubaThrower class
+class ScubaThrower(ThrowerAnt):
+    food_cost=6
+    name='Scuba'
+    implemented=True
+    is_waterproof=True
+
 # END Problem 11
 
 
@@ -417,7 +435,9 @@ class QueenAnt(ThrowerAnt):
     food_cost = 7
     # OVERRIDE CLASS ATTRIBUTES HERE
     # BEGIN Problem 12
-    implemented = False   # Change to True to view in the GUI
+    def zero_health_callback(self):
+        ants_lose()
+        return super().zero_health_callback()
     # END Problem 12
 
     def action(self, gamestate):
@@ -426,6 +446,12 @@ class QueenAnt(ThrowerAnt):
         """
         # BEGIN Problem 12
         "*** YOUR CODE HERE ***"
+        super().action(gamestate)
+        node=self.place.exit
+        while(node is not None):
+            if(node.ant):
+                node.ant.double()
+            node=node.exit
         # END Problem 12
 
     def reduce_health(self, amount):
@@ -434,6 +460,7 @@ class QueenAnt(ThrowerAnt):
         """
         # BEGIN Problem 12
         "*** YOUR CODE HERE ***"
+        super().reduce_health(amount)
         # END Problem 12
 
 
